@@ -9,7 +9,8 @@ from file_list_generator import generate_files_list
 config = configparser.ConfigParser()
 config.read('config.cfg')
 
-bot = telebot.TeleBot(config['DEFAULT']['token'])
+if config['DEFAULT']['token']:
+    bot = telebot.TeleBot(config['DEFAULT']['token'])
 
 
 def folder_opener(message=None, current_path=None, message_to_delete=None, message_to_edit=None):
