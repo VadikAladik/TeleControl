@@ -1,16 +1,35 @@
+import time
+
 import telebot
 import configparser
 import os
 import subprocess
+import threading
 
 from keyboards import explorer_buttons
 from file_list_generator import generate_files_list
 
+
 config = configparser.ConfigParser()
 config.read('config.cfg')
 
-if config['DEFAULT']['token']:
-    bot = telebot.TeleBot(config['DEFAULT']['token'])
+
+def get_bot_token():
+    global bot
+    while True:
+        try:
+            config = configparser.ConfigParser()
+            config.read('config.cfg')
+
+            bot = telebot.TeleBot(config['DEFAULT']['token'])
+            break
+        except Exception:
+            pass
+            time.sleep(0.5)
+
+
+bot_thread = threading.Thread(target=get_bot_token)
+bot_thread.start()
 
 
 def folder_opener(message=None, current_path=None, message_to_delete=None, message_to_edit=None):
